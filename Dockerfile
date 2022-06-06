@@ -9,4 +9,4 @@ RUN apt update && \
       chmod +x ./kubectl && \
       mv ./kubectl /usr/local/bin/kubectl
 
-CMD ./command.sh
+#CMD ./command.sh

@@ -6,4 +6,17 @@ spec:
   serviceAccountName: internal-kubectl
   containers:
     - name: internal-kubectl
-      image: absalon1000rr/kubectl-inside
+      image: absalon1000rr/kubectl-inside:v1
+      command: [ "/bin/sh", "-c", "/app/scale-to-zero.sh" ]
+      #command: [ "cat", "/app/scale-to-zero.sh" ]
+      volumeMounts:
+      - name: config-volume
+        mountPath: '/app'
+
+  volumes:
+    - name: config-volume
+      configMap:
+        # Provide the name of the ConfigMap containing the files you want
+        # to add to the container
+        name: scale-to-zero
+        defaultMode: 0777
