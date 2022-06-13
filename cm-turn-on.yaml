@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scale-to-zero-turn-on
+  namespace: kube-system
+data:
+  scale-to-zero.sh: |
+    #!/bin/bash
+    kubectl get ns --no-headers=true | awk '{print $1}' |  while IFS= read -r line; do
+      if [[ $line =~ .*-ns-.* ]]; then
+        echo "Namespace : $line"
+        kubectl get deployment -n $line --no-headers=true | awk '{print $1}' | while IFS= read -r deploy; do
+          kubectl scale deployment $deploy -n $line --replicas=1 --all
+        done
+      else
+        echo "$line NOT matched"
+      fi;
+    done  

@@ -1,16 +1,18 @@
 From: https://trstringer.com/kubectl-from-within-pod/
 
+## Create image
 ```
 docker build -t kubectl-inside .
 docker tag kubectl-inside absalon1000rr/kubectl-inside
 docker push absalon1000rr/kubectl-inside
 
 ```
-
+## Deploy an check
 ```
 kubectl apply -f pod.yaml -n kube-system
 kubectl logs internal-kubectl -n kube-system
 ```
+## temp
 prendido: 7:30am
 apagado: 8pm
 

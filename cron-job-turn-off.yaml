@@ -1,0 +1,75 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: bx-cron-kube-system-turn-off-tasks
+    blue.app/type: java
+    #blue.github/action: "2234192366"
+    blue.github/actor: absalon-blue
+    #blue.github/branch: development
+    #blue.github/commit: e0adbaa523e0e1d67c4a4cfb8789bd08daba7c50
+    blue.github/org: bluexpress
+    # blue.github/repo: bx-cron-cicd-poc-python
+    tags.datadoghq.com/env: development
+    tags.datadoghq.com/service: bx-cron-kube-system-turn-off-tasks
+    tags.datadoghq.com/version: 0.0.1
+  name: bx-cron-kube-system-turn-off-tasks
+  namespace: kube-system
+spec:
+  
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        spec:
+          serviceAccountName: internal-kubectl-commands-sa
+          containers:
+          - env:
+            - name: BX_MS_VERSION
+              value: 0.0.1
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APM_NON_LOCAL_TRAFFIC
+              value: "true"
+            image: public.ecr.aws/u2u9u9e8/bx-kubectl-1.23.6-debian:v1
+            command: [ "/bin/sh", "-c", "/app/scale-to-zero.sh" ]
+            volumeMounts:
+              - name: config-volume
+                mountPath: '/app'
+            imagePullPolicy: IfNotPresent
+            name: bx-cron-kube-system-turn-off-tasks
+          restartPolicy: OnFailure
+          terminationGracePeriodSeconds: 30
+          volumes:
+          - name: config-volume
+            configMap:
+              # Provide the name of the ConfigMap containing the files you want
+              # to add to the container
+              name: scale-to-zero-turn-off
+              defaultMode: 0777
+      ttlSecondsAfterFinished: 100
+  schedule: '15 8 * * *'
+  successfulJobsHistoryLimit: 3
+  suspend: true
