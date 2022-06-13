@@ -12,9 +12,14 @@ docker push absalon1000rr/kubectl-inside
 kubectl apply -f pod.yaml -n kube-system
 kubectl logs internal-kubectl -n kube-system
 ```
-## temp
+## Agendamiento
 prendido: 7:30am
 apagado: 8pm
 
 '15 8 * * *' : 8:15 am
 '45 19 * * *': 19:45 pm
+
+## Imagen publica en ECR (PROD account en AWS)
+
+
+public.ecr.aws/u2u9u9e8/bx-kubectl-1.23.6-debian:v1
