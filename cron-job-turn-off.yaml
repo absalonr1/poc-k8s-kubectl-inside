@@ -70,6 +70,7 @@ spec:
               name: scale-to-zero-turn-off
               defaultMode: 0777
       ttlSecondsAfterFinished: 100
-  schedule: '15 8 * * *'
+  schedule: '45 23 * * *'
+  # EC2 en UTC time - hora chile restar 4
   successfulJobsHistoryLimit: 3
   suspend: true

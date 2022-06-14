@@ -54,10 +54,17 @@ spec:
             - name: DD_APM_NON_LOCAL_TRAFFIC
               value: "true"
             image: public.ecr.aws/u2u9u9e8/bx-kubectl-1.23.6-debian:v1
+            # image: ubuntu:latest
             command: [ "/bin/sh", "-c", "/app/scale-to-zero.sh" ]
+            # command:
+            # - /bin/sh
+            # - -c
+            # - date
             volumeMounts:
               - name: config-volume
                 mountPath: '/app'
+              # - name: tz-chile
+              #   mountPath: /etc/localtime
             imagePullPolicy: IfNotPresent
             name: bx-cron-kube-system-turn-on-tasks
           restartPolicy: OnFailure
@@ -69,7 +76,11 @@ spec:
               # to add to the container
               name: scale-to-zero-turn-on
               defaultMode: 0777
+          # - name: tz-chile
+          #   hostPath:
+          #     path: /usr/share/zoneinfo/Chile/Continental          
       ttlSecondsAfterFinished: 100
-  schedule: '45 19 * * *'
+  schedule: '0 12 * * *'
+  # EC2 en UTC time - hora chile restar 4
   successfulJobsHistoryLimit: 3
-  suspend: true
+  suspend: false

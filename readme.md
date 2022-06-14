@@ -2,23 +2,23 @@ From: https://trstringer.com/kubectl-from-within-pod/
 
 ## Create image
 ```
-docker build -t kubectl-inside .
-docker tag kubectl-inside absalon1000rr/kubectl-inside
-docker push absalon1000rr/kubectl-inside
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/u2u9u9e8
+docker build -t bx-kubectl-1.23.6-debian .
+docker tag bx-kubectl-1.23.6-debian:latest public.ecr.aws/u2u9u9e8/bx-kubectl-1.23.6-debian:v1
+docker push public.ecr.aws/u2u9u9e8/bx-kubectl-1.23.6-debian:v1
 
 ```
-## Deploy an check
-```
-kubectl apply -f pod.yaml -n kube-system
-kubectl logs internal-kubectl -n kube-system
-```
+
 ## Agendamiento
-prendido: 7:30am
-apagado: 8pm
 
-'15 8 * * *' : 8:15 am
-'45 19 * * *': 19:45 pm
-
+~~~~
+  prendido: 7:30am
+  apagado: 8pm
+~~~~
+~~~~
+  '15 8 * * *' : 8:15 am
+  '45 19 * * *': 19:45 pm
+~~~~
 ## Imagen publica en ECR (PROD account en AWS)
 
 
